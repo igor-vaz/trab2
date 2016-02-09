@@ -1,6 +1,11 @@
 import java.util.*;
 import java.io.*;
 import java.lang.Thread;
+import java.io.File;
+
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 class Andar {
 	private int numero;
@@ -73,26 +78,25 @@ class Elevador extends Thread {
 
 public class SCE {
 	// ArrayList<Andar> andar;
-
 	public static void main(String[] args) {
-
-
-		try  {
-			BufferedReader in = new BufferedReader(new FileReader("file.txt"));
-
-			String line;
-			// TODO: ver como pegar cada numero ao invés da linha
-			while((line = in.readLine()) != null)
-			 {
-			    System.out.println(line);
-			}
-			in.close();
-		} catch(Exception e)  {}
-
-
-
-
 		
+		Scanner s = null;
+
+        try {
+            s = new Scanner(new BufferedReader(new FileReader("file.txt")));
+
+            while (s.hasNext()) {
+                System.out.println(s.next());
+            }
+        }catch(FileNotFoundException e){
+			
+		}
+		 finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+				
 		// for (int i = 0 ; i < N ; i++)  {
 		// 	this.andar.add(new Andar(i));
 
@@ -100,7 +104,5 @@ public class SCE {
 		// 		this.andar.get(i).addRequisicaoFila(new Requisicao(destino));
 		// 	}
 		// }
-
-
 	}
 }
