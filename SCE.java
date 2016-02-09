@@ -80,13 +80,16 @@ public class SCE {
 	// ArrayList<Andar> andar;
 	public static void main(String[] args) {
 		
+		String [] content = new String[200];
 		Scanner s = null;
-
+		int i =0;
         try {
             s = new Scanner(new BufferedReader(new FileReader("file.txt")));
 
             while (s.hasNext()) {
-                System.out.println(s.next());
+				content[i] = s.next();
+                //System.out.println(content[i]);
+				i++;
             }
         }catch(FileNotFoundException e){
 			
