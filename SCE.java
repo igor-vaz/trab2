@@ -80,6 +80,7 @@ public class SCE {
 	// ArrayList<Andar> andar;
 	public static void main(String[] args) {
 		
+		//le cada elemento do arquivo
 		String [] content = new String[200];
 		Scanner s = null;
 		int i =0;
@@ -99,6 +100,35 @@ public class SCE {
                 s.close();
             }
         }
+		
+	   	//le cada linha do arquivo
+		ArrayList<String[]> splitted = new ArrayList<String[]>();
+		try{
+		  // Open the file
+		  FileInputStream fstream = new FileInputStream("file.txt");
+		  // Get the object of DataInputStream
+		  DataInputStream in = new DataInputStream(fstream);
+		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		  String strLine;
+		  //Read File Line By Line
+		  int j = 0;
+		  
+			while ((strLine = br.readLine()) != null)   {
+			// split the line on your splitter(s)
+				splitted.add(strLine.split("\n")); // here - is used as the delimiter
+		  	}
+		  //Close the input stream
+		  in.close();
+		    }catch (Exception e){//Catch exception if any
+		  System.err.println("Error: " + e.getMessage());
+		  }
+		System.out.println(splitted.size());
+		for (int j = 0 ; j < splitted.size() ; j++){
+			for(String s1 : splitted.get(j))
+				System.out.println(s1);
+			//System.out.println("linha "+j+": "+ splitted.get(j).toString());
+		}
+
 				
 		// for (int i = 0 ; i < N ; i++)  {
 		// 	this.andar.add(new Andar(i));
