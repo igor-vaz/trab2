@@ -31,6 +31,42 @@ class Andar {
 	public void addRequisicaoFila(Requisicao requisicao) {
 		this.fila.add(requisicao);
 	}
+
+	public String toString() {
+	    return "(Andar Numero: " + numero + " fila: " + fila + ")";
+	}
+}
+
+class Elevador extends Thread {
+	private static int id_gen;
+	private int id;
+	private int capacidade;
+	private Andar andarAtual;
+	private int qtdPessoas;
+
+	public Elevador(int capacidade, Andar andarAtual) {
+		this.id = id_gen++;
+		this.id = id;
+		this.capacidade = capacidade;
+		this.andarAtual = andarAtual;
+		this.qtdPessoas = 0;
+	}
+
+	public int getCapacidade() {
+		return this.capacidade;
+	}
+
+	public Andar getAndarAtual() {
+		return this.andarAtual;
+	}
+
+	public int getQtdPessoas() {
+		return this.qtdPessoas;
+	}
+
+	public String toString() {
+	    return "(Elevador ID: " + id + " capacidade: " + capacidade + " andarAtual: " + andarAtual + " # de Pessoas: " + qtdPessoas + ")";
+	}
 }
 
 class Requisicao {
@@ -50,29 +86,9 @@ class Requisicao {
 	public int getDestino() {
 		return this.destino;
 	}
-}
 
-class Elevador extends Thread {
-	private int capacidade;
-	private int pessoas;
-	private Andar andarAtual;
-
-	public Elevador(int capacidade, Andar andar) {
-		this.capacidade = capacidade;
-		this.pessoas = 0;
-		this.andarAtual = andar;
-	}
-
-	public int getCapacidade() {
-		return this.capacidade;
-	}
-
-	public int getPessoas() {
-		return this.pessoas;
-	}
-
-	public Andar getAndarAtual() {
-		return this.andarAtual;
+	public String toString() {
+	    return "(Requisicao ID: " + id + " Destino: " + destino + ")";
 	}
 }
 
@@ -80,53 +96,92 @@ public class SCE {
 	// ArrayList<Andar> andar;
 	public static void main(String[] args) {
 		
-		//le cada elemento do arquivo
-		String [] content = new String[200];
-		Scanner s = null;
-		int i =0;
-        try {
-            s = new Scanner(new BufferedReader(new FileReader("file.txt")));
+		// //le cada elemento do arquivo
+		// String [] content = new String[200];
+		// Scanner s = null;
+		// int i =0;
+  //       try {
+  //           s = new Scanner(new BufferedReader(new FileReader("file.txt")));
 
-            while (s.hasNext()) {
-				content[i] = s.next();
-                //System.out.println(content[i]);
-				i++;
-            }
-        }catch(FileNotFoundException e){
+  //           while (s.hasNext()) {
+		// 		content[i] = s.next();
+  //               //System.out.println(content[i]);
+		// 		i++;
+  //           }
+  //       }catch(FileNotFoundException e){
 			
-		}
-		 finally {
-            if (s != null) {
-                s.close();
-            }
-        }
+		// }
+		//  finally {
+  //           if (s != null) {
+  //               s.close();
+  //           }
+  //       }
+
+
+		int qtdAndares = 0;
+		int qtdElevadores = 0;
+		int capacidade = 0;
+		ArrayList<Andar> andares = new ArrayList<Andar>();
+		ArrayList<Elevador> elevadores = new ArrayList<Elevador>();
 		
 	   	//le cada linha do arquivo
-		ArrayList<String[]> splitted = new ArrayList<String[]>();
+		// ArrayList<String[]> splitted = new ArrayList<String[]>();
+		String[] splitted;
+
 		try{
-		  // Open the file
-		  FileInputStream fstream = new FileInputStream("file.txt");
-		  // Get the object of DataInputStream
-		  DataInputStream in = new DataInputStream(fstream);
-		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		  String strLine;
-		  //Read File Line By Line
-		  int j = 0;
-		  
-			while ((strLine = br.readLine()) != null)   {
+			// Open the file
+			FileInputStream fstream = new FileInputStream("file.txt");
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			//Read File Line By Line
+
+			for(int linha = 0 ; (strLine = br.readLine()) != null ; linha++) {
 			// split the line on your splitter(s)
-				splitted.add(strLine.split("\n")); // here - is used as the delimiter
-		  	}
-		  //Close the input stream
-		  in.close();
-		    }catch (Exception e){//Catch exception if any
-		  System.err.println("Error: " + e.getMessage());
-		  }
-		System.out.println(splitted.size());
-		for (int j = 0 ; j < splitted.size() ; j++){
-			for(String s1 : splitted.get(j))
-				System.out.println(s1);
-			//System.out.println("linha "+j+": "+ splitted.get(j).toString());
+				// splitted.add(strLine.split(" ")); // here - is used as the delimiter
+				splitted = strLine.split(" ");
+
+				switch(linha) {
+					case 0:
+						qtdAndares = Integer.parseInt(splitted[0]);
+						qtdElevadores = Integer.parseInt(splitted[1]);
+						capacidade = Integer.parseInt(splitted[2]);
+
+						for (int i = 0 ; i < qtdAndares ; i++)
+							andares.add(new Andar(i));
+						
+						break;
+
+					case 1:
+						for (int i = 0 ; i < qtdElevadores ; i++)
+							elevadores.add(new Elevador(capacidade, andares.get(Integer.parseInt(splitted[i]))));
+
+						break;
+
+					default:
+						int qtd_pessoas = Integer.parseInt(splitted[0]);
+
+						for(int i = 0 ; i < qtd_pessoas ; i++)
+							andares.get(linha-2).addRequisicaoFila(new Requisicao(Integer.parseInt(splitted[i+1])));
+							
+				}
+			}
+
+			//Close the input stream
+			in.close();
+	    } catch(Exception e) { //Catch exception if any
+		  	System.err.println("Error: " + e.getMessage());
+		}
+
+
+
+		// System.out.println(splitted.size());
+		// for (int j = 0 ; j < splitted.size() ; j++){
+		for (int j = 0 ; j < 5 ; j++){
+			// for(String s1 : splitted.get(j))
+			// 	System.out.println(s1+"|");
+			System.out.println(andares.get(j));
 		}
 
 				
