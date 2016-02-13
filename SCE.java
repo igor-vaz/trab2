@@ -70,7 +70,11 @@ class Elevador extends Thread {
 
 	//metodo executado pelas threads
 	public void run(){
-
+		try{
+			for(int i = 0;i < monitor.getAndares().size(); i++){
+				monitor.irDestino(andarAtual.getNumero());
+			}
+		}catch(Exception e){}
 	}
 }
 
@@ -104,6 +108,10 @@ class Monitor{
 		this.andares = _andares;
 	}
 
+	public ArrayList<Andar> getAndares(){
+		return andares;
+	}
+
 	public synchronized void irDestino(int andarAtual){
 
 	}
@@ -112,7 +120,7 @@ class Monitor{
 
 public class SCE {
 	public static void main(String[] args) {
-	
+	Monitor monitor;
 	int qtdAndares = 0;
 	int qtdElevadores = 0;
 	int capacidade = 0;
