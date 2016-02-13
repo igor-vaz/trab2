@@ -98,7 +98,15 @@ class Requisicao {
 }
 
 class Monitor{
+	private ArrayList<Andar> andares = new ArrayList<Andar>();
+	
+	public Monitor(ArrayList<Andar> _andares){
+		this.andares = _andares;
+	}
 
+	public synchronized void irDestino(int andarAtual){
+
+	}
 
 }
 
