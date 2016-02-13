@@ -46,7 +46,6 @@ class Elevador extends Thread {
 
 	public Elevador(int capacidade, Andar andarAtual) {
 		this.id = id_gen++;
-		this.id = id;
 		this.capacidade = capacidade;
 		this.andarAtual = andarAtual;
 		this.qtdPessoas = 0;
@@ -66,6 +65,11 @@ class Elevador extends Thread {
 
 	public String toString() {
 	    return "(Elevador ID: " + id + " capacidade: " + capacidade + " andarAtual: " + andarAtual + " # de Pessoas: " + qtdPessoas + ")";
+	}
+
+	//metodo executado pelas threads
+	public void run(){
+
 	}
 }
 
@@ -147,7 +151,7 @@ public class SCE {
 		  	System.err.println("Error: " + e.getMessage());
 		}
 
-		for (int j = 0 ; j < 5 ; j++){
+		for (int j = 0 ; j < qtdAndares ; j++){
 			System.out.println(andares.get(j));
 		}
 	}
