@@ -38,6 +38,7 @@ class Andar {
 }
 
 class Elevador extends Thread {
+	private Monitor monitor;
 	private static int id_gen;
 	private int id;
 	private int capacidade;
@@ -96,16 +97,21 @@ class Requisicao {
 	}
 }
 
+class Monitor{
+
+
+}
+
 public class SCE {
 	public static void main(String[] args) {
-
-		int qtdAndares = 0;
-		int qtdElevadores = 0;
-		int capacidade = 0;
-		ArrayList<Andar> andares = new ArrayList<Andar>();
-		ArrayList<Elevador> elevadores = new ArrayList<Elevador>();
+	
+	int qtdAndares = 0;
+	int qtdElevadores = 0;
+	int capacidade = 0;
+	ArrayList<Andar> andares = new ArrayList<Andar>();
+	ArrayList<Elevador> elevadores = new ArrayList<Elevador>();
 		
-		String[] splitted;
+	String[] splitted;
 
 		try{
 			// Open the file
@@ -133,6 +139,7 @@ public class SCE {
 
 					case 1:
 						for (int i = 0 ; i < qtdElevadores ; i++)
+							//cria threads
 							elevadores.add(new Elevador(capacidade, andares.get(Integer.parseInt(splitted[i]))));
 
 						break;
@@ -154,5 +161,9 @@ public class SCE {
 		for (int j = 0 ; j < qtdAndares ; j++){
 			System.out.println(andares.get(j));
 		}
+		for (int i = 0; i < qtdElevadores; i++) {
+			elevadores.get(i).run();
+		}
+
 	}
 }
