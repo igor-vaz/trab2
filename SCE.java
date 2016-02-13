@@ -93,30 +93,7 @@ class Requisicao {
 }
 
 public class SCE {
-	// ArrayList<Andar> andar;
 	public static void main(String[] args) {
-		
-		// //le cada elemento do arquivo
-		// String [] content = new String[200];
-		// Scanner s = null;
-		// int i =0;
-  //       try {
-  //           s = new Scanner(new BufferedReader(new FileReader("file.txt")));
-
-  //           while (s.hasNext()) {
-		// 		content[i] = s.next();
-  //               //System.out.println(content[i]);
-		// 		i++;
-  //           }
-  //       }catch(FileNotFoundException e){
-			
-		// }
-		//  finally {
-  //           if (s != null) {
-  //               s.close();
-  //           }
-  //       }
-
 
 		int qtdAndares = 0;
 		int qtdElevadores = 0;
@@ -124,8 +101,6 @@ public class SCE {
 		ArrayList<Andar> andares = new ArrayList<Andar>();
 		ArrayList<Elevador> elevadores = new ArrayList<Elevador>();
 		
-	   	//le cada linha do arquivo
-		// ArrayList<String[]> splitted = new ArrayList<String[]>();
 		String[] splitted;
 
 		try{
@@ -139,7 +114,6 @@ public class SCE {
 
 			for(int linha = 0 ; (strLine = br.readLine()) != null ; linha++) {
 			// split the line on your splitter(s)
-				// splitted.add(strLine.split(" ")); // here - is used as the delimiter
 				splitted = strLine.split(" ");
 
 				switch(linha) {
@@ -167,30 +141,14 @@ public class SCE {
 							
 				}
 			}
-
 			//Close the input stream
 			in.close();
 	    } catch(Exception e) { //Catch exception if any
 		  	System.err.println("Error: " + e.getMessage());
 		}
 
-
-
-		// System.out.println(splitted.size());
-		// for (int j = 0 ; j < splitted.size() ; j++){
 		for (int j = 0 ; j < 5 ; j++){
-			// for(String s1 : splitted.get(j))
-			// 	System.out.println(s1+"|");
 			System.out.println(andares.get(j));
 		}
-
-				
-		// for (int i = 0 ; i < N ; i++)  {
-		// 	this.andar.add(new Andar(i));
-
-		// 	foreach (destinos as destino)  {
-		// 		this.andar.get(i).addRequisicaoFila(new Requisicao(destino));
-		// 	}
-		// }
 	}
 }
