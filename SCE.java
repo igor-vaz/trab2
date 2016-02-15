@@ -70,18 +70,22 @@ class Elevador extends Thread {
 	private int numero;
 	private int capacidade;
 	private Andar andarAtual;
-	private int qtdPessoas;
+	private ArrayList<Requisicao> fila;
 
 	public Elevador(int capacidade, Andar andarAtual, Monitor monitor) {
 		this.numero = id_gen++;
 		this.capacidade = capacidade;
 		this.andarAtual = andarAtual;
-		this.qtdPessoas = 0;
 		this.monitor = monitor;
+		this.fila = new ArrayList<Requisicao>();
 	}
 
 	public int getNumero() {
 		return this.numero;
+	}
+
+	public ArrayList<Requisicao> getFila() {
+		return this.fila;
 	}
 
 	public int getCapacidade() {
@@ -92,12 +96,44 @@ class Elevador extends Thread {
 		return this.andarAtual;
 	}
 
-	public int getQtdPessoas() {
-		return this.qtdPessoas;
+	public void setAndarAtual(Andar andarAtual) {
+		this.andarAtual = andarAtual;
 	}
 
+	public int qtdResquisicoes() {
+		return this.fila.size();
+	}
+
+	public void addRequisicao(Requisicao requisicao) {
+		this.fila.add(requisicao);
+	}
+
+	public void removeRequisicao(Requisicao requisicao) {
+		this.fila.remove(requisicao);
+	}
+
+	//Pega o proximo destino para o elevador, qnd ja existem pessoas nele
+	public Requisicao proxDestino(){
+		int min = this.monitor.getAndares().size();
+	    int closest = andarAtual.getNumero();
+	    //int cont = 0;
+
+	    for (int i = 0 ; i < this.fila.size() ; i++) {
+	    	//System.out.println(fila.get(i).getDestino() + " " + andarAtual.getNumero());
+	        final int diff = Math.abs(fila.get(i).getDestino() - andarAtual.getNumero());
+
+	        if (diff < min) {
+	            min = diff;
+	            closest = i;
+	        }
+	    }
+
+	    return fila.get(closest);
+	}
+
+
 	public String toString() {
-	    return "(Elevador ID: " + numero + " capacidade: " + capacidade + " andarAtual: " + andarAtual + " # de Pessoas: " + qtdPessoas + ")";
+	    return "(Elevador ID: " + numero + " capacidade: " + capacidade + " andarAtual: " + andarAtual + " # de Pessoas: " + fila.size() + ")";
 	}
 
 	//metodo executado pelas threads
@@ -123,18 +159,18 @@ class Monitor{
 		this.andares = _andares;
 	}
 
-	/* Não acho que isso deva existir...
+
 	public ArrayList<Andar> getAndares(){
 		return andares;
 	}
-	*/
+
 
 
 	/**
 	 *	Calcula o próximo destino baseado na proximidade
-	 *	e na quantidade de requisições
+	 *	e na quantidade de requisições, qnd o elevador está vazio
 	 */
-	public Andar proxDestino(Elevador elevador){
+	public Andar proxAndarComRequisicao(Elevador elevador){
 		int numeroAndarAtual = elevador.getAndarAtual().getNumero();
 
 		/* testes...
@@ -171,11 +207,35 @@ class Monitor{
 	    return andares.get(numeroProxAndar);
 	}
 
+	public void reArranjaFila(Requisicao rq, Elevador elevador){
+		System.out.println(rq);
+		elevador.setAndarAtual(this.andares.get(rq.getDestino()));
+		elevador.removeRequisicao(rq);
+	}
+
 	public synchronized void irDestino(Elevador elevador){
 
-		Andar proxAndar = this.proxDestino(elevador);
+		Andar proxAndar = this.proxAndarComRequisicao(elevador);
 
-		System.out.println("Elevador " + elevador.getNumero() + " proximo andar: " + proxAndar.getNumero());
+		System.out.println("Elevador " + elevador.getNumero() + " andar atual: " + elevador.getAndarAtual().getNumero() + " proximo andar: " + proxAndar.getNumero());
+
+
+		elevador.addRequisicao(new Requisicao(0));
+		elevador.addRequisicao(new Requisicao(3));
+		elevador.addRequisicao(new Requisicao(0));
+		elevador.addRequisicao(new Requisicao(3));
+		elevador.addRequisicao(new Requisicao(0));
+		elevador.addRequisicao(new Requisicao(3));
+
+		System.out.println(elevador.qtdResquisicoes());
+		
+		int tamanho = elevador.qtdResquisicoes();
+
+		for(int i = 0; i < tamanho; i++){
+			
+			reArranjaFila(elevador.proxDestino(),elevador);
+		}
+		System.out.println(elevador.getFila());
 		
 
 	}
