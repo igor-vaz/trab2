@@ -1,0 +1,32 @@
+# de Andares:5
+# de Elevadores: 2
+Capacidade dos Elevadores: 6
+Criando thread do elevador 0
+Criando thread do elevador 1
+Criando requisicao para o andar 0 = (Requisicao ID: 0 Destino: 1)
+Criando requisicao para o andar 0 = (Requisicao ID: 1 Destino: 4)
+Criando requisicao para o andar 0 = (Requisicao ID: 2 Destino: 2)
+Criando requisicao para o andar 0 = (Requisicao ID: 3 Destino: 3)
+Criando requisicao para o andar 0 = (Requisicao ID: 4 Destino: 3)
+Criando requisicao para o andar 0 = (Requisicao ID: 5 Destino: 4)
+Criando requisicao para o andar 1 = (Requisicao ID: 6 Destino: 0)
+Criando requisicao para o andar 1 = (Requisicao ID: 7 Destino: 3)
+Criando requisicao para o andar 1 = (Requisicao ID: 8 Destino: 0)
+Criando requisicao para o andar 1 = (Requisicao ID: 9 Destino: 4)
+Criando requisicao para o andar 2 = (Requisicao ID: 10 Destino: 1)
+Criando requisicao para o andar 2 = (Requisicao ID: 11 Destino: 2)
+Criando requisicao para o andar 2 = (Requisicao ID: 12 Destino: 3)
+Criando requisicao para o andar 2 = (Requisicao ID: 13 Destino: 3)
+Criando requisicao para o andar 2 = (Requisicao ID: 14 Destino: 4)
+Criando requisicao para o andar 2 = (Requisicao ID: 15 Destino: 4)
+Criando requisicao para o andar 2 = (Requisicao ID: 16 Destino: 3)
+Criando requisicao para o andar 2 = (Requisicao ID: 17 Destino: 3)
+Criando requisicao para o andar 3 = (Requisicao ID: 18 Destino: 0)
+Criando requisicao para o andar 3 = (Requisicao ID: 19 Destino: 4)
+Criando requisicao para o andar 3 = (Requisicao ID: 20 Destino: 0)
+Criando requisicao para o andar 3 = (Requisicao ID: 21 Destino: 0)
+Criando requisicao para o andar 3 = (Requisicao ID: 22 Destino: 0)
+Criando requisicao para o andar 4 = (Requisicao ID: 23 Destino: 0)
+Criando requisicao para o andar 4 = (Requisicao ID: 24 Destino: 1)
+Criando requisicao para o andar 4 = (Requisicao ID: 25 Destino: 1)
+terminando execucao!

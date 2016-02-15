@@ -75,6 +75,9 @@ class Elevador extends Thread {
 	private int capacidade;
 	private Andar andarAtual;
 	private ArrayList<Requisicao> fila;
+	public PrintWriter writer;
+
+
 
 	public Elevador(int capacidade, Andar andarAtual, Monitor monitor) {
 		this.numero = id_gen++;
@@ -82,6 +85,9 @@ class Elevador extends Thread {
 		this.andarAtual = andarAtual;
 		this.monitor = monitor;
 		this.fila = new ArrayList<Requisicao>();
+		try{
+			this.writer = new PrintWriter("thread"+this.numero+".txt", "UTF-8");
+		}catch(Exception e){}
 	}
 
 	public int getNumero() {
@@ -138,7 +144,7 @@ class Elevador extends Thread {
 		
 		for(int i = 0; i < tamanho; i++){
 			rq = this.proxDestino();
-			System.out.println("Elevador "+this.numero+" executando " +rq+", restando "+ (this.qtdRequisicoes()-1) +" requisicoes");
+			writer.println("Elevador "+this.numero+" executando " +rq+", restando "+ (this.qtdRequisicoes()-1) +" requisicoes");
 			this.setAndarAtual(this.monitor.getAndares().get(rq.getDestino()));
 			this.removeRequisicao(rq);
 		}
@@ -151,13 +157,16 @@ class Elevador extends Thread {
 	//metodo executado pelas threads
 	public void run() {
 		while(this.monitor.getFlag() || this.monitor.haRequisicoes() || this.qtdRequisicoes() > 0) {
-			if(this.fila.size() == 0) {
+			if(this.fila.size() == 0 && this.monitor.haRequisicoes()) {
 				this.monitor.buscarRequisicoes(this);
-			} else {
-				System.out.println("Elevador " + this.numero + " executa requisicoes");
+			}
+
+			if(this.qtdRequisicoes() > 0) {
+				writer.println("Elevador " + this.numero + " executa requisicoes");
 				this.executarRequisicoes();
 			}
 		}
+		writer.close();
 	}
 }
 
@@ -227,7 +236,7 @@ class Monitor{
 
 	public synchronized void buscarRequisicoes(Elevador elevador) {
 		Andar proxAndar = this.proxAndarComRequisicao(elevador);
-		System.out.println("Elevador " + elevador.getNumero() + " busca requisicoes no andar " + proxAndar.getNumero());
+		elevador.writer.println("Elevador " + elevador.getNumero() + " busca requisicoes no andar " + proxAndar.getNumero());
 
 		int tamanho = proxAndar.qtdRequisicoes();
 
@@ -238,7 +247,7 @@ class Monitor{
 		}
 
 		elevador.setAndarAtual(proxAndar);
-		System.out.println("Elevador " + elevador.getNumero() + " buscou requisicoes no andar " + proxAndar.getNumero() + " com fila no elevador = " + elevador.getFila());
+		elevador.writer.println("Elevador " + elevador.getNumero() + " buscou requisicoes no andar " + proxAndar.getNumero() + " com fila no elevador = " + elevador.getFila());
 	}
 }
 
@@ -250,66 +259,75 @@ public class SCE {
 		ArrayList<Andar> andares = new ArrayList<Andar>();
 		ArrayList<Elevador> elevadores = new ArrayList<Elevador>();
 		Monitor monitor = new Monitor(andares);
-			
 		String[] splitted;
 
 		try{
-			// Open the file
-			FileInputStream fstream = new FileInputStream("file.txt");
-			// Get the object of DataInputStream
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-			//Read File Line By Line
+			PrintWriter writer = new PrintWriter("main.txt", "UTF-8");	
+			try{
+				// abre arquivo
+				FileInputStream fstream = new FileInputStream("file.txt");
+				// pega objeto de DataInputStream
+				DataInputStream in = new DataInputStream(fstream);
+				BufferedReader br = new BufferedReader(new InputStreamReader(in));
+				String strLine;
+				//le arquivo por linha
 
-			for(int linha = 0 ; (strLine = br.readLine()) != null ; linha++) {
-				// split the line on your splitter(s)
-				splitted = strLine.split(" ");
+				for(int linha = 0 ; (strLine = br.readLine()) != null ; linha++) {
+					// quebra a linha por espaço
+					splitted = strLine.split(" ");
 
-				switch(linha) {
-					case 0:
-						qtdAndares = Integer.parseInt(splitted[0]);
-						qtdElevadores = Integer.parseInt(splitted[1]);
-						capacidade = Integer.parseInt(splitted[2]);
+					switch(linha) {
+						case 0:
+							qtdAndares = Integer.parseInt(splitted[0]);
+							qtdElevadores = Integer.parseInt(splitted[1]);
+							capacidade = Integer.parseInt(splitted[2]);
+							writer.println("# de Andares:"+qtdAndares+"\n# de Elevadores: "+qtdElevadores+"\nCapacidade dos Elevadores: "+capacidade);
 
-						for (int i = 0 ; i < qtdAndares ; i++)
-							andares.add(new Andar(i));
-						
-						break;
+							for (int i = 0 ; i < qtdAndares ; i++)
+								andares.add(new Andar(i));
+							
+							break;
 
-					case 1:
-						for (int i = 0 ; i < qtdElevadores ; i++){
-							//cria threads
-							Elevador el = new Elevador(capacidade, andares.get(Integer.parseInt(splitted[i])), monitor);
-							elevadores.add(el);
-							el.start();
-						}
-						break;
+						case 1:
+							for (int i = 0 ; i < qtdElevadores ; i++){
+								//cria threads
+								writer.println("Criando thread do elevador " + i);
+								Elevador el = new Elevador(capacidade, andares.get(Integer.parseInt(splitted[i])), monitor);
+								elevadores.add(el);
+								el.start();
+							}
+							break;
 
-					default:
+						default:
 
-						int qtd_pessoas = Integer.parseInt(splitted[0]);
+							int qtd_pessoas = Integer.parseInt(splitted[0]);
 
-						for(int i = 0 ; i < qtd_pessoas ; i++)
-							andares.get(linha-2).addRequisicao(new Requisicao(Integer.parseInt(splitted[i+1])));
-								
+							for(int i = 0 ; i < qtd_pessoas ; i++){
+								Requisicao rq = new Requisicao(Integer.parseInt(splitted[i+1]));
+								writer.println("Criando requisicao para o andar "+(linha-2)+" = "+rq);
+								andares.get(linha-2).addRequisicao(rq);
+							}
+									
+					}
+				}
+				
+				monitor.setFlag(false);
+				//fecha input stream
+				in.close();
+		    } catch(Exception e) {
+			  	System.err.println("Error: " + e.getMessage());
+			}
+
+			//espera pelo termino de todas as threads elevadores
+			for (int i = 0; i < qtdElevadores; i++) {
+				try {
+					elevadores.get(i).join();
+				} catch (InterruptedException e) {
+			  		System.err.println("Error: " + e.getMessage());
 				}
 			}
-			
-			monitor.setFlag(false);
-			//Close the input stream
-			in.close();
-	    } catch(Exception e) { //Catch exception if any
-		  	System.err.println("Error: " + e.getMessage());
-		}
-
-		//espera pelo termino de todas as threads elevadores
-		for (int i = 0; i < qtdElevadores; i++) {
-			try {
-				elevadores.get(i).join();
-			} catch (InterruptedException e) {
-		  		System.err.println("Error: " + e.getMessage());
-			}
-		}
+			writer.println("terminando execucao!");
+			writer.close();
+		}catch(Exception e){}
 	}
 }

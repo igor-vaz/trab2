@@ -1,0 +1,26 @@
+Elevador 1 busca requisicoes no andar 2
+Elevador 1 buscou requisicoes no andar 2 com fila no elevador = [(Requisicao ID: 10 Destino: 1), (Requisicao ID: 11 Destino: 2)]
+Elevador 1 executa requisicoes
+Elevador 1 executando (Requisicao ID: 11 Destino: 2), restando 1 requisicoes
+Elevador 1 executando (Requisicao ID: 10 Destino: 1), restando 0 requisicoes
+Elevador 1 busca requisicoes no andar 1
+Elevador 1 buscou requisicoes no andar 1 com fila no elevador = [(Requisicao ID: 6 Destino: 0), (Requisicao ID: 7 Destino: 3), (Requisicao ID: 8 Destino: 0), (Requisicao ID: 9 Destino: 4)]
+Elevador 1 executa requisicoes
+Elevador 1 executando (Requisicao ID: 6 Destino: 0), restando 3 requisicoes
+Elevador 1 executando (Requisicao ID: 8 Destino: 0), restando 2 requisicoes
+Elevador 1 executando (Requisicao ID: 7 Destino: 3), restando 1 requisicoes
+Elevador 1 executando (Requisicao ID: 9 Destino: 4), restando 0 requisicoes
+Elevador 1 busca requisicoes no andar 4
+Elevador 1 buscou requisicoes no andar 4 com fila no elevador = [(Requisicao ID: 23 Destino: 0), (Requisicao ID: 24 Destino: 1)]
+Elevador 1 executa requisicoes
+Elevador 1 executando (Requisicao ID: 24 Destino: 1), restando 1 requisicoes
+Elevador 1 executando (Requisicao ID: 23 Destino: 0), restando 0 requisicoes
+Elevador 1 busca requisicoes no andar 2
+Elevador 1 buscou requisicoes no andar 2 com fila no elevador = [(Requisicao ID: 12 Destino: 3), (Requisicao ID: 13 Destino: 3), (Requisicao ID: 14 Destino: 4), (Requisicao ID: 15 Destino: 4), (Requisicao ID: 16 Destino: 3), (Requisicao ID: 17 Destino: 3)]
+Elevador 1 executa requisicoes
+Elevador 1 executando (Requisicao ID: 12 Destino: 3), restando 5 requisicoes
+Elevador 1 executando (Requisicao ID: 13 Destino: 3), restando 4 requisicoes
+Elevador 1 executando (Requisicao ID: 16 Destino: 3), restando 3 requisicoes
+Elevador 1 executando (Requisicao ID: 17 Destino: 3), restando 2 requisicoes
+Elevador 1 executando (Requisicao ID: 14 Destino: 4), restando 1 requisicoes
+Elevador 1 executando (Requisicao ID: 15 Destino: 4), restando 0 requisicoes

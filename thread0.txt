@@ -1,0 +1,21 @@
+Elevador 0 busca requisicoes no andar 0
+Elevador 0 buscou requisicoes no andar 0 com fila no elevador = [(Requisicao ID: 0 Destino: 1), (Requisicao ID: 1 Destino: 4), (Requisicao ID: 2 Destino: 2), (Requisicao ID: 3 Destino: 3), (Requisicao ID: 4 Destino: 3), (Requisicao ID: 5 Destino: 4)]
+Elevador 0 executa requisicoes
+Elevador 0 executando (Requisicao ID: 0 Destino: 1), restando 5 requisicoes
+Elevador 0 executando (Requisicao ID: 2 Destino: 2), restando 4 requisicoes
+Elevador 0 executando (Requisicao ID: 3 Destino: 3), restando 3 requisicoes
+Elevador 0 executando (Requisicao ID: 4 Destino: 3), restando 2 requisicoes
+Elevador 0 executando (Requisicao ID: 1 Destino: 4), restando 1 requisicoes
+Elevador 0 executando (Requisicao ID: 5 Destino: 4), restando 0 requisicoes
+Elevador 0 busca requisicoes no andar 3
+Elevador 0 buscou requisicoes no andar 3 com fila no elevador = [(Requisicao ID: 18 Destino: 0), (Requisicao ID: 19 Destino: 4), (Requisicao ID: 20 Destino: 0), (Requisicao ID: 21 Destino: 0), (Requisicao ID: 22 Destino: 0)]
+Elevador 0 executa requisicoes
+Elevador 0 executando (Requisicao ID: 19 Destino: 4), restando 4 requisicoes
+Elevador 0 executando (Requisicao ID: 18 Destino: 0), restando 3 requisicoes
+Elevador 0 executando (Requisicao ID: 20 Destino: 0), restando 2 requisicoes
+Elevador 0 executando (Requisicao ID: 21 Destino: 0), restando 1 requisicoes
+Elevador 0 executando (Requisicao ID: 22 Destino: 0), restando 0 requisicoes
+Elevador 0 busca requisicoes no andar 4
+Elevador 0 buscou requisicoes no andar 4 com fila no elevador = [(Requisicao ID: 25 Destino: 1)]
+Elevador 0 executa requisicoes
+Elevador 0 executando (Requisicao ID: 25 Destino: 1), restando 0 requisicoes
