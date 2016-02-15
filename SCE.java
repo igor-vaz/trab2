@@ -51,11 +51,15 @@ class Andar {
 		this.fila = fila;
 	}
 
-	public void addRequisicaoFila(Requisicao requisicao) {
+	public void addRequisicao(Requisicao requisicao) {
 		this.fila.add(requisicao);
 	}
 
-	public int qtdRequisicoesFila() {
+	public void removeRequisicao(Requisicao requisicao) {
+		this.fila.remove(requisicao);
+	}
+
+	public int qtdRequisicoes() {
 		return this.fila.size();
 	}
 
@@ -100,7 +104,7 @@ class Elevador extends Thread {
 		this.andarAtual = andarAtual;
 	}
 
-	public int qtdResquisicoes() {
+	public int qtdRequisicoes() {
 		return this.fila.size();
 	}
 
@@ -116,7 +120,6 @@ class Elevador extends Thread {
 	public Requisicao proxDestino(){
 		int min = this.monitor.getAndares().size();
 	    int closest = andarAtual.getNumero();
-	    //int cont = 0;
 
 	    for (int i = 0 ; i < this.fila.size() ; i++) {
 	    	//System.out.println(fila.get(i).getDestino() + " " + andarAtual.getNumero());
@@ -131,6 +134,18 @@ class Elevador extends Thread {
 	    return fila.get(closest);
 	}
 
+	public  void executarRequisicoes(){
+		int tamanho = this.qtdRequisicoes();
+		Requisicao rq;
+		
+		for(int i = 0; i < tamanho; i++){
+			rq = this.proxDestino();
+			System.out.println("Elevador "+this.numero+" executando " +rq+", restando "+ (this.qtdRequisicoes()-1) +" requisicoes");
+			this.setAndarAtual(this.monitor.getAndares().get(rq.getDestino()));
+			this.removeRequisicao(rq);
+		}
+	}
+
 
 	public String toString() {
 	    return "(Elevador ID: " + numero + " capacidade: " + capacidade + " andarAtual: " + andarAtual + " # de Pessoas: " + fila.size() + ")";
@@ -138,22 +153,21 @@ class Elevador extends Thread {
 
 	//metodo executado pelas threads
 	public void run() {
-		/*
-		try{
-			for(int i = 0;i < monitor.getAndares().size(); i++){
-				monitor.irDestino(andarAtual.getNumero());
+
+		while(this.monitor.getFlag() || this.monitor.haRequisicoes() || this.qtdRequisicoes() > 0) {
+			if(this.fila.size() == 0) {
+				this.monitor.buscarRequisicoes(this);
+			} else {
+				System.out.println("Elevador " + this.numero + " executa requisicoes");
+				this.executarRequisicoes();
 			}
-		}catch(Exception e){}
-		*/
-
-		monitor.irDestino(this);
-
-		
+		}
 	}
 }
 
 class Monitor{
 	private ArrayList<Andar> andares = new ArrayList<Andar>();
+	private boolean flag = true;
 	
 	public Monitor(ArrayList<Andar> _andares){
 		this.andares = _andares;
@@ -164,27 +178,34 @@ class Monitor{
 		return andares;
 	}
 
+	public void setFlag(boolean _flag){
+		this.flag = _flag;
+	}
 
+	public boolean getFlag(){
+		return flag;
+	}	
+
+	public boolean haRequisicoes() {
+		for(Andar andar : this.andares)
+			if(andar.qtdRequisicoes() > 0)
+				return true;
+
+		return false;
+	}
 
 	/**
 	 *	Calcula o próximo destino baseado na proximidade
 	 *	e na quantidade de requisições, qnd o elevador está vazio
 	 */
 	public Andar proxAndarComRequisicao(Elevador elevador){
+		
 		int numeroAndarAtual = elevador.getAndarAtual().getNumero();
-
-		/* testes...
-		System.out.println("Elevador " + elevador.getNumero() + " andar atual: " + numeroAndarAtual);
-
-		for (int numero = 0 ; numero < andares.size() ; numero++)
-			System.out.println(numero + " " + andares.get(numero).qtdRequisicoesFila());
-		*/
-
 	    int min = andares.size();
 	    int closest = numeroAndarAtual;
 
 	    for (int i = 0 ; i < andares.size() ; i++) {
-	    	if(andares.get(i).qtdRequisicoesFila() != 0) {
+	    	if(andares.get(i).qtdRequisicoes() != 0) {
 		        final int diff = Math.abs(i - numeroAndarAtual);
 
 		        if (diff < min) {
@@ -196,50 +217,40 @@ class Monitor{
 
 	    int closestRange = Math.abs(numeroAndarAtual - closest);
 
-		int numeroProxAndar = numeroAndarAtual - closestRange;
-		int qtdResquisicoes = andares.get(numeroAndarAtual - closestRange).qtdRequisicoesFila();
+		int numeroProxAndar = 0;
+		int qtdRequisicoes = 0;
 
-	    if(andares.get(numeroAndarAtual + closestRange).qtdRequisicoesFila() > qtdResquisicoes) {
+		if(numeroAndarAtual - closestRange > 0 && andares.get(numeroAndarAtual - closestRange).qtdRequisicoes() > qtdRequisicoes) {
+	    	numeroProxAndar = numeroAndarAtual - closestRange;
+	    	qtdRequisicoes = andares.get(numeroAndarAtual - closestRange).qtdRequisicoes();
+		}
+
+	    if(numeroAndarAtual + closestRange < andares.size() && andares.get(numeroAndarAtual + closestRange).qtdRequisicoes() > qtdRequisicoes) {
 	    	numeroProxAndar = numeroAndarAtual + closestRange;
-	    	qtdResquisicoes = andares.get(numeroAndarAtual + closestRange).qtdRequisicoesFila();
+	    	qtdRequisicoes = andares.get(numeroAndarAtual + closestRange).qtdRequisicoes();
 	    }
 	    
 	    return andares.get(numeroProxAndar);
 	}
 
-	public void reArranjaFila(Requisicao rq, Elevador elevador){
-		System.out.println(rq);
-		elevador.setAndarAtual(this.andares.get(rq.getDestino()));
-		elevador.removeRequisicao(rq);
-	}
-
-	public synchronized void irDestino(Elevador elevador){
-
+	public synchronized void buscarRequisicoes(Elevador elevador) {
 		Andar proxAndar = this.proxAndarComRequisicao(elevador);
+		System.out.println("Elevador " + elevador.getNumero() + " busca requisicoes no andar " + proxAndar.getNumero());
 
-		System.out.println("Elevador " + elevador.getNumero() + " andar atual: " + elevador.getAndarAtual().getNumero() + " proximo andar: " + proxAndar.getNumero());
+		//System.out.println(proxAndar.qtdRequisicoes() + " " + elevador.getCapacidade());
+		int tamanho = proxAndar.qtdRequisicoes();
 
-
-		elevador.addRequisicao(new Requisicao(0));
-		elevador.addRequisicao(new Requisicao(3));
-		elevador.addRequisicao(new Requisicao(0));
-		elevador.addRequisicao(new Requisicao(3));
-		elevador.addRequisicao(new Requisicao(0));
-		elevador.addRequisicao(new Requisicao(3));
-
-		System.out.println(elevador.qtdResquisicoes());
-		
-		int tamanho = elevador.qtdResquisicoes();
-
-		for(int i = 0; i < tamanho; i++){
-			
-			reArranjaFila(elevador.proxDestino(),elevador);
+		for(int i = 0 ; i < tamanho && i < elevador.getCapacidade() ; i++) {
+			//System.out.println();
+			Requisicao rq = proxAndar.getFila().get(0);
+			elevador.addRequisicao(rq);
+			proxAndar.removeRequisicao(rq);
 		}
-		System.out.println(elevador.getFila());
-		
 
+		elevador.setAndarAtual(proxAndar);
+
+		System.out.println("Elevador " + elevador.getNumero() + " buscou requisicoes no andar " + proxAndar.getNumero() + " com fila no elevador = " + elevador.getFila());
 	}
-
 }
 
 public class SCE {
@@ -278,20 +289,25 @@ public class SCE {
 						break;
 
 					case 1:
-						for (int i = 0 ; i < qtdElevadores ; i++)
+						for (int i = 0 ; i < qtdElevadores ; i++){
 							//cria threads
-							elevadores.add(new Elevador(capacidade, andares.get(Integer.parseInt(splitted[i])), monitor));
-
+							Elevador el = new Elevador(capacidade, andares.get(Integer.parseInt(splitted[i])), monitor);
+							elevadores.add(el);
+							el.start();
+						}
 						break;
 
 					default:
+
 						int qtd_pessoas = Integer.parseInt(splitted[0]);
 
 						for(int i = 0 ; i < qtd_pessoas ; i++)
-							andares.get(linha-2).addRequisicaoFila(new Requisicao(Integer.parseInt(splitted[i+1])));
+							andares.get(linha-2).addRequisicao(new Requisicao(Integer.parseInt(splitted[i+1])));
 								
 				}
 			}
+			
+			monitor.setFlag(false);
 			//Close the input stream
 			in.close();
 	    } catch(Exception e) { //Catch exception if any
@@ -305,10 +321,9 @@ public class SCE {
 		*/
 
 		//inicia as threads elevadores
-		for (int i = 0; i < qtdElevadores; i++) {
-			elevadores.get(i).start();
-		}
-
+		//for (int i = 0; i < qtdElevadores; i++) {
+		//	elevadores.get(i).start();
+		//}
 
 		//espera pelo termino de todas as threads elevadores
 		for (int i = 0; i < qtdElevadores; i++) {
