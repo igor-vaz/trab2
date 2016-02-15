@@ -122,7 +122,6 @@ class Elevador extends Thread {
 	    int closest = andarAtual.getNumero();
 
 	    for (int i = 0 ; i < this.fila.size() ; i++) {
-	    	//System.out.println(fila.get(i).getDestino() + " " + andarAtual.getNumero());
 	        final int diff = Math.abs(fila.get(i).getDestino() - andarAtual.getNumero());
 
 	        if (diff < min) {
@@ -130,7 +129,6 @@ class Elevador extends Thread {
 	            closest = i;
 	        }
 	    }
-
 	    return fila.get(closest);
 	}
 
@@ -146,14 +144,12 @@ class Elevador extends Thread {
 		}
 	}
 
-
 	public String toString() {
 	    return "(Elevador ID: " + numero + " capacidade: " + capacidade + " andarAtual: " + andarAtual + " # de Pessoas: " + fila.size() + ")";
 	}
 
 	//metodo executado pelas threads
 	public void run() {
-
 		while(this.monitor.getFlag() || this.monitor.haRequisicoes() || this.qtdRequisicoes() > 0) {
 			if(this.fila.size() == 0) {
 				this.monitor.buscarRequisicoes(this);
@@ -173,7 +169,6 @@ class Monitor{
 		this.andares = _andares;
 	}
 
-
 	public ArrayList<Andar> getAndares(){
 		return andares;
 	}
@@ -190,7 +185,6 @@ class Monitor{
 		for(Andar andar : this.andares)
 			if(andar.qtdRequisicoes() > 0)
 				return true;
-
 		return false;
 	}
 
@@ -216,7 +210,6 @@ class Monitor{
 	    }
 
 	    int closestRange = Math.abs(numeroAndarAtual - closest);
-
 		int numeroProxAndar = 0;
 		int qtdRequisicoes = 0;
 
@@ -229,7 +222,6 @@ class Monitor{
 	    	numeroProxAndar = numeroAndarAtual + closestRange;
 	    	qtdRequisicoes = andares.get(numeroAndarAtual + closestRange).qtdRequisicoes();
 	    }
-	    
 	    return andares.get(numeroProxAndar);
 	}
 
@@ -237,18 +229,15 @@ class Monitor{
 		Andar proxAndar = this.proxAndarComRequisicao(elevador);
 		System.out.println("Elevador " + elevador.getNumero() + " busca requisicoes no andar " + proxAndar.getNumero());
 
-		//System.out.println(proxAndar.qtdRequisicoes() + " " + elevador.getCapacidade());
 		int tamanho = proxAndar.qtdRequisicoes();
 
 		for(int i = 0 ; i < tamanho && i < elevador.getCapacidade() ; i++) {
-			//System.out.println();
 			Requisicao rq = proxAndar.getFila().get(0);
 			elevador.addRequisicao(rq);
 			proxAndar.removeRequisicao(rq);
 		}
 
 		elevador.setAndarAtual(proxAndar);
-
 		System.out.println("Elevador " + elevador.getNumero() + " buscou requisicoes no andar " + proxAndar.getNumero() + " com fila no elevador = " + elevador.getFila());
 	}
 }
@@ -314,17 +303,6 @@ public class SCE {
 		  	System.err.println("Error: " + e.getMessage());
 		}
 
-		/*
-		for (int j = 0 ; j < qtdAndares ; j++){
-			System.out.println(andares.get(j));
-		}
-		*/
-
-		//inicia as threads elevadores
-		//for (int i = 0; i < qtdElevadores; i++) {
-		//	elevadores.get(i).start();
-		//}
-
 		//espera pelo termino de todas as threads elevadores
 		for (int i = 0; i < qtdElevadores; i++) {
 			try {
@@ -333,6 +311,5 @@ public class SCE {
 		  		System.err.println("Error: " + e.getMessage());
 			}
 		}
-
 	}
 }
